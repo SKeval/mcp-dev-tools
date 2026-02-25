@@ -59,11 +59,23 @@ async def main():
                 }
             )
             print(result.content[0].text)
+            
+            
+            # Test 4: Pull Request Description Formatter
+            print("\n" + "=" * 60)
+            print("\nTOOL 4: generate_pr_description\n")
+            result = await session.call_tool(
+                "generate_pr_description",
+                {
+                    "title": "Add FHIR validation",
+                    "change_summary": "Added input validation for all FHIR Patient resources before ingestion into the clinical pipeline"
+                }
+            )
+            print(result.content[0].text)
 
             print("\n" + "=" * 60)
-            print("All 3 tools working. mcp-dev-tools is ready.")
+            print("All 4 tools working. mcp-dev-tools is ready.")
             print("=" * 60)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -65,12 +65,24 @@ CHECKLISTS = {
         "[ ] Security: inputs are validated and sanitized",
         "[ ] Performance: no N+1 queries or unnecessary loops",
     ],
+    "java": [
+        "[ ] The strict object-oriented nature of Java requires clear design",
+        "[ ] Large-scale enterprise applications require long-term maintainability",
+        "[ ] Performance optimization is a key factor in Java",
+        "[ ] Verify that the code performs the intended functions without altering unintended objects or variables",
+        "[ ] Maintain standard formatting for indentation, brackets, and spacing",
+        "[ ] Verify if functions and classes are reusable across contexts",
+        "[ ] Ensure JVM caches static final constants to reduce redundant calculations",
+        "[ ] Check code coverage stats to ensure tests sufficiently exercise core logic",
+        "[ ] Check if relevant exceptions are always logged, wrapped, or rethrown (not swallowed silently)",
+        "[ ] Identify common functionality and logic and see if it can be extracted into a shared parent class or method",
+    ]
 }
 
 
 @mcp.tool()
 def code_review_checklist(
-    language: Literal["python", "typescript", "csharp", "general"] = "general",
+    language: Literal["python", "typescript", "csharp", "general", "java"] = "general",
     include_general: bool = True,
 ) -> str:
     """
@@ -246,6 +258,51 @@ def api_docs_formatter(
     ]
 
     return "\n".join(lines)
+
+# ── TOOL 4: Pull Request Description Formatter ─────────────────────────────────────────────────
+
+@mcp.tool()
+def generate_pr_description(
+    title: str,
+    change_summary: str
+) -> str: 
+    """ 
+        Generates a Conventional Pull-formatted Pull Request message from change summery
+
+        Args:
+            title (str): Title of Pull Request
+            change_summary (str): Plain-English description of what changes user want to pull.
+
+        Returns:
+            str: A formatated pull.request message following the Conventional Pull Request.
+    """  
+    
+    summary = change_summary.strip().rstrip(".")
+    if len(summary) > 72:
+        summary = summary[:69] + "..."
+    summary = summary[0].lower() + summary[1:]
+
+    subject_line = f"{title}: {summary}"
+
+    lines = [
+        f"## Pull Request: {title}\n",
+        "### Summary of Changes\n",
+        f"{subject_line}\n",
+        
+         "### Type of Change\n",
+         "-[] Bug fix\n",
+         "-[x] New feature\n",
+         "-[] Refactor\n",
+         "-[] Documentation\n",
+         
+         "### Checklist\n",
+         "-[] Code reviewed\n",
+         "-[] Tests added\n",
+         "-[] Documentation updated\n", 
+    ]
+    
+    return "\n".join(lines)
+    
 
 
 # ── Entry Point ────────────────────────────────────────────────────────────────
